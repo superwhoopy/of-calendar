@@ -1,5 +1,5 @@
 # coding=utf-8
-#
+
 import re
 
 ################################################################################
@@ -29,9 +29,12 @@ Cette opération a été effectuée par OHAYON Emmanuel
 
 ################################################################################
 
-match_dates = re.findall( REGEXP_RESA, SAMPLE_TEXT)
 match_dates = re.finditer( REGEXP_RESA, SAMPLE_TEXT)
 match_plane = re.finditer( REGEXP_PLANE, SAMPLE_TEXT)
 
-for date in match_dates:
-  print date
+# TODO replace all carriage returns by spaces in SAMPLE_TEXT
+
+for date, plane in zip(match_dates, match_plane):
+    print date.group("start_date")
+    print date.group("end_time")
+    print plane.group("plane")
