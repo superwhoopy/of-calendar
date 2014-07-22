@@ -1,5 +1,6 @@
 # coding=utf-8
 import re
+import ofevent
 
 ################################################################################
 
@@ -18,11 +19,10 @@ def regexp_resa(prefix=""):
             "(?P<" + prefix + "end_date>"   + REGEXP_DATE + ") "    + \
             "(?P<" + prefix + "end_time>"   + REGEXP_TIME + ")"
 
-REGEXP_CONFIRM_MSG=regexp_resa() + "\s*" + REGEXP_PLANE + "\s*.*?" + \
-            REGEXP_ACTION_CONFIRMED
-
-REGEXP_CANCEL_MSG=regexp_resa() + "\s*" + REGEXP_PLANE + "\s*.*?" + \
-            REGEXP_ACTION_CANCELED
+REGEXP_MSG=regexp_resa() + "\s*" + REGEXP_PLANE + "\s*.*?" + \
+           "(?P<action>" + REGEXP_ACTION_CONFIRMED + "|" + \
+                           REGEXP_ACTION_CANCELED  + "|" + \
+                           REGEXP_ACTION_MODIFIED +")"
 
 REGEXP_MODIF_MSG=\
   regexp_resa("old_") + "\s*" + REGEXP_PLANE + "\s*.*?" + \
@@ -55,25 +55,38 @@ Cette opération a été effectuée par HUE Nicolas
 
 ################################################################################
 
-oneline_text = re.sub( '\n', ' ', SAMPLE_TEXT)
+ofevt_action = { REGEXP_ACTION_MODIFIED : ofevent.ACTION_MODIFY, \
+                 REGEXP_ACTION_CONFIRMED : ofevent.ACTION_CONFIRM, \
+                 REGEXP_ACTION_CANCELED : ofevent.ACTION_CANCEL }
 
-print(oneline_text)
+def parse_text( text):
+    actions = []
+    oneline_text = re.sub( '\n', ' ', text)
 
-match_confirm = re.finditer( REGEXP_CONFIRM_MSG, oneline_text)
-match_cancel  = re.finditer( REGEXP_CANCEL_MSG, oneline_text)
-match_modif   = re.finditer( REGEXP_MODIF_MSG, oneline_text)
+    messages = re.finditer( REGEXP_MSG, oneline_text)
 
-for confirmed in match_confirm:
-    print(confirmed.group("start_date", "start_time", "end_date", "end_time",\
-                        "plane"))
+    start=0
+    while True:
+        msg = re.search( REGEXP_MSG, oneline_text[start:])
+        if msg is None:
+            break
 
-for canceled in match_cancel:
-    print(canceled.group("start_date", "start_time", "end_date", "end_time",\
-                        "plane"))
+        evt1 = OfEvent( msg.group("start_date"), \
+                        msg.group("start_time"), \
+                        msg.group("end_time"),   \
+                        msg.group("plane"))
+        evt2 = None
+        action = ofevt_action[msg.group("action")]
 
-for modified in match_modif:
-    print(modified.group("old_start_date", "old_start_time", "old_end_date",\
-                       "old_end_time", "plane", "new_start_date",\
-                       "new_start_time", "new_end_date",\
-                       "new_end_time"))
+        if msg.group("action")==REGEXP_ACTION_MODIFIED:
+            msg = re.search( REGEXP_MODIF_MSG, oneline_text[start:])
+            evt2 = OfEvent(msg.group("new_start_date"), \
+                           msg.group("new_start_time"), \
+                           msg.group("new_end_time"),   \
+                           msg.group("new_plane"))
 
+        actions.append( OfAction( action, evt1, evt2))
+        start += msg.end()
+
+    return actions
+    
