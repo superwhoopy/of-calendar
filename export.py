@@ -1,17 +1,16 @@
 # coding=utf-8
 import ofevent
 
-#Objet,Date de début,Heure de début,Date de fin,Heure de fin,Toute la journée,Description,Lieu,Privé
-#Examen final,12/05/20,19:10,12/05/07,22:00,False,Deux sujets de dissertation ayant trait aux questions traitées au cours du semestre,"University of Columbia, Salle Schermerhorn 614",True
-
-CSV_HEADER= "\"Subject\",\"Start Date\",\"Start Time\",\"End Date\",\"End Time\",\"All day event\",\"Location\""
-
 EVT_PLACE="Aérodrome de Toussus-le-Noble"
 
 ################################################################################
+
 def guill(s):
     return "\"" + s + "\""
 
+
+CSV_HEADER= "\"Subject\",\"Start Date\",\"Start Time\",\"End Date\"," + \
+            "\"End Time\",\"All day event\",\"Location\""
 class CsvExport:
     @staticmethod
     def csv_objet(ofevt):
