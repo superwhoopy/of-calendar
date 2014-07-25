@@ -8,12 +8,12 @@ import ofevent
 REGEXP_DATE="\d{2}/\d{2}/\d{4}"
 REGEXP_TIME="\d{2}:\d{2}"
 
-REGEXP_ACTION_CONFIRMED="est confirmÃ©e"
-REGEXP_ACTION_CANCELED="est annulÃ©e"
-REGEXP_ACTION_MODIFIED="est remplacÃ©e par"
+REGEXP_ACTION_CONFIRMED="est confirmée"
+REGEXP_ACTION_CANCELED="est annulée"
+REGEXP_ACTION_MODIFIED="est remplacée par"
 
 def regexp_resa(prefix=""):
-  return "La rÃ©servation du " + \
+  return "La réservation du " + \
             "(?P<" + prefix + "start_date>" + REGEXP_DATE + ") "    + \
             "(?P<" + prefix + "start_time>" + REGEXP_TIME + ") au " + \
             "(?P<" + prefix + "end_date>"   + REGEXP_DATE + ") "    + \
@@ -34,26 +34,26 @@ REGEXP_MODIF_MSG=\
 
 
 
-SAMPLE_TEXT="""La rÃ©servation du 01/09/2014 18:30 au 01/09/2014 20:30
+SAMPLE_TEXT="""La réservation du 01/09/2014 18:30 au 01/09/2014 20:30
  sur le F-GGQO
 avec comme pilote OHAYON Emmanuel
 avec comme instructeur HUE Nicolas
  est confirmÃ©e.
-Cette opÃ©ration a Ã©tÃ© effectuÃ©e par OHAYON Emmanuel
-La rÃ©servation du 07/09/2014 10:00 au 07/09/2014 13:00
+Cette opération a été effectuée par OHAYON Emmanuel
+La réservation du 07/09/2014 10:00 au 07/09/2014 13:00
  sur le F-GGQP
  avec comme commentaires : plage de silence
 avec comme pilote OHAYON Emmanuel
 avec comme instructeur HUE Nicolas
- est remplacÃ©e par La rÃ©servation du 07/09/2014 09:00 au 07/09/2014 12:00
+ est remplacée par La réservation du 07/09/2014 09:00 au 07/09/2014 12:00
  sur le F-GGQP
  avec comme commentaires : plage de silence
-La rÃ©servation du 27/07/2014 09:00 au 27/07/2014 12:00
+La réservation du 27/07/2014 09:00 au 27/07/2014 12:00
  sur le F-GGQP
 avec comme pilote OHAYON Emmanuel
 avec comme instructeur HUE Nicolas
  est annulÃ©e.
-Cette opÃ©ration a Ã©tÃ© effectuÃ©e par HUE Nicolas
+Cette opération a été effectuée par HUE Nicolas
 """
 
 ################################################################################
@@ -76,6 +76,7 @@ def parse_text( text):
 
         evt1 = ofevent.OfEvent( msg.group("start_date"), \
                         msg.group("start_time"), \
+                        msg.group("end_date"), \
                         msg.group("end_time"),   \
                         msg.group("plane"))
         evt2 = None
@@ -85,6 +86,7 @@ def parse_text( text):
             msg = re.search( REGEXP_MODIF_MSG, oneline_text)
             evt2 = ofevent.OfEvent(msg.group("new_start_date"), \
                            msg.group("new_start_time"), \
+                           msg.group("new_end_date"),   \
                            msg.group("new_end_time"),   \
                            msg.group("new_plane"))
 
@@ -93,5 +95,6 @@ def parse_text( text):
 
     return actions
     
-for action in parse_text(SAMPLE_TEXT):
-    print(action)
+# for action in parse_text(SAMPLE_TEXT):
+#     print(action)
+

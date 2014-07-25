@@ -7,7 +7,7 @@ class ActionType:
     CONFIRM = 2
 
 class OfEvent:
-    def OfEvent(self, date_start, t_start, date_end, t_end, plane ):
+    def __init__(self, date_start, t_start, date_end, t_end, plane ):
         self._date_start = date_start
         self._t_start    = t_start
         self._date_end   = date_end
@@ -15,11 +15,12 @@ class OfEvent:
         self._plane      = plane
 
     def __str__(self):
-        return "From " + str(date_start) + " " + str(t_start) + " to " + \
-               str(date_end) + " " + str(t_end) + " with " + str(plane)
+        return "From " + str(self._date_start) + " " + str(self._t_start) + \
+               " to " + str(self._date_end) + " " + str(self._t_end) + \
+               " with " +  str(self._plane)
 
 class OfAction:
-    def OfAction(self, action, evt1, evt2=None):
+    def __init__(self, action, evt1, evt2=None):
         assert action==ActionType.CANCEL or action==ActionType.MODIFY or \
                action==ActionType.CONFIRM
         assert evt2 is None or action==ActionType.MODIFY
@@ -32,9 +33,9 @@ class OfAction:
                  ActionType.CANCEL  : "Cancellation" , \
                  ActionType.CONFIRM : "Confirmation" }
 
-        ans = text[_action] + " of:\n  " + str(_evt1)
-        if self._action==ACTION_MODIFY:
-            ans += "\nInto:\n  " + str(_evt2)
+        ans = text[self._action] + " of:\n  " + str(self._evt1)
+        if self._action==ActionType.MODIFY:
+            ans += "\nInto:\n  " + str(self._evt2)
         return ans
 
     def sync():
