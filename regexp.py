@@ -1,5 +1,4 @@
 # coding=utf-8
-# vim: set fileencoding=utf-8:
 import re
 import ofevent
 
@@ -38,7 +37,7 @@ SAMPLE_TEXT="""La réservation du 01/09/2014 18:30 au 01/09/2014 20:30
  sur le F-GGQO
 avec comme pilote OHAYON Emmanuel
 avec comme instructeur HUE Nicolas
- est confirmÃ©e.
+ est confirmée.
 Cette opération a été effectuée par OHAYON Emmanuel
 La réservation du 07/09/2014 10:00 au 07/09/2014 13:00
  sur le F-GGQP
@@ -52,7 +51,7 @@ La réservation du 27/07/2014 09:00 au 27/07/2014 12:00
  sur le F-GGQP
 avec comme pilote OHAYON Emmanuel
 avec comme instructeur HUE Nicolas
- est annulÃ©e.
+ est annulée.
 Cette opération a été effectuée par HUE Nicolas
 """
 
@@ -95,6 +94,10 @@ def parse_text( text):
 
     return actions
     
-# for action in parse_text(SAMPLE_TEXT):
-#     print(action)
+from export import CsvExport
 
+actions = parse_text(SAMPLE_TEXT)
+# for action in actions:
+#     print(csvexport.action2csvline(action))
+
+print(CsvExport.actions2csv(actions))
