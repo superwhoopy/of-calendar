@@ -94,10 +94,3 @@ def parse_text( text):
 
     return actions
     
-from export import CsvExport
-
-actions = parse_text(SAMPLE_TEXT)
-# for action in actions:
-#     print(csvexport.action2csvline(action))
-
-print(CsvExport.actions2csv(actions))

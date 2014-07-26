@@ -1,0 +1,20 @@
+La réservation du 01/09/2014 18:30 au 01/09/2014 20:30
+ sur le F-GGQO
+avec comme pilote OHAYON Emmanuel
+avec comme instructeur HUE Nicolas
+ est confirmée.
+Cette opération a été effectuée par OHAYON Emmanuel
+La réservation du 07/09/2014 10:00 au 07/09/2014 13:00
+ sur le F-GGQP
+ avec comme commentaires : plage de silence
+avec comme pilote OHAYON Emmanuel
+avec comme instructeur HUE Nicolas
+ est remplacée par La réservation du 07/09/2014 09:00 au 07/09/2014 12:00
+ sur le F-GGQP
+ avec comme commentaires : plage de silence
+La réservation du 27/07/2014 09:00 au 27/07/2014 12:00
+ sur le F-GGQP
+avec comme pilote OHAYON Emmanuel
+avec comme instructeur HUE Nicolas
+ est annulée.
+Cette opération a été effectuée par HUE Nicolas

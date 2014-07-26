@@ -1,6 +1,6 @@
 import sys
 
 def msg(text, exit=False):
-    print ("[ERROR]" + text, file=sys.stderr);
+    sys.stderr.write("[ERROR]" + text + "\n");
     if (exit):
         sys.exit(1)
