@@ -1,6 +1,6 @@
 import sys
 
-def msg(text, exit=False):
-    sys.stderr.write("[ERROR]" + text + "\n");
+def msg(text, file="<unknown>", line="<unknown>", exit=False):
+    sys.stderr.write("[ERROR] " + file + ":" + line + " " + text + "\n");
     if (exit):
         sys.exit(1)

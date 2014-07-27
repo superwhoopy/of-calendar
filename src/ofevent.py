@@ -1,4 +1,3 @@
-import datetime
 
 ################################################################################
 class ActionType:
@@ -38,6 +37,6 @@ class OfAction:
             ans += "\nInto:\n  " + str(self._evt2)
         return ans
 
-    def sync():
+    def sync(self):
         # TODO
         return

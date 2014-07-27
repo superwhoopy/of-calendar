@@ -26,12 +26,17 @@ FORMAT_HELP="Format of the output file. Accepted values are " +\
 
 ################################################################################
 
-def read_input():
-    try:
-        f = open(input_file, 'r')
-        ans = f.read()
-    except IOError:
-        err.msg("Unable to read the specified input file", exit=True)
+def read_input(input_files):
+    ans = ""
+    for ifile in input_files:
+        try:
+            f = open(ifile, 'r') if ifile!='-' else sys.stdin
+            ans += f.read()
+        except IOError as e:
+            err.msg("Unable to read from input: " + str(e), __file__, \
+                    exit=True)
+        ans += "\n"
+    
     return ans 
 
 def parse_arguments():
@@ -45,37 +50,34 @@ def parse_arguments():
     #                     help=CALENDAR_HELP, default="Default")
     # parser.add_argument("--credentials",  nargs=1, help=CREDENTIALS_HELP)
     parser.add_argument("-i", "--input-file", help=FILE_OPT_HELP, nargs='*', \
-                        default=[sys.stdin])
+                        default=['-'])
     parser.add_argument("-t", "--format", help=FORMAT_HELP, nargs='?', \
                         default="csv")
     parser.add_argument("-o", "--output", help=FILE_OUT_HELP, nargs='?', \
-                        default=sys.stdout)
+                        default='-')
 
-    parser.parse_args()
-    if format not in FORMATS:
-        err.msg("Invalid output format", exit=True)
+    args=parser.parse_args()
+    if args.format not in FORMATS:
+        err.msg("Invalid output format", __file__, exit=True)
+
+    return args
 
 
 def run():
-    launch_dir = os.getcwd()
-    exec_dir = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(exec_dir)
+    args = parse_arguments()
 
-    parse_arguments()
-
-    input_text = read_input()
-    actions = regexp.parse_text(input_file)
+    input_text = read_input(args.input_file)
+    actions = regexp.parse_text(input_text)
 
     # Call the appropriate function
-    ans = FORMATS[format](actions)
+    ans = FORMATS[args.format](actions)
 
     try:
-        f = open(output, 'w')
+        f = open(args.output, 'w') if args.output!='-' else sys.stdout
         f.write(ans)
     except IOError:
-        err.msg("Unable to write to the specified output file", exit=True)
-
-    os.chdir(launch_dir)
+        err.msg("Unable to write to the specified output file", \
+                __file__, exit=True)
 
 
 if __name__ == '__main__':
