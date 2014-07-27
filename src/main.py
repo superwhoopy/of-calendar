@@ -1,3 +1,8 @@
+""" Main module of of-calendar
+
+This module implements the arguments parser and calls the parsing and event
+generators accordingly
+"""
 import os.path
 import sys
 import argparse
@@ -7,6 +12,9 @@ import ofevent
 import err
 import export
 
+
+################################################################################
+# HELP MESSAGES
 ################################################################################
 
 DESCRIPTION_TEXT="Reads an automatic message sent by OpenFlyers and " + \
@@ -16,17 +24,20 @@ DESCRIPTION_TEXT="Reads an automatic message sent by OpenFlyers and " + \
 # PWD_HELP="Your Google account password"
 # CALENDAR_HELP="Name of the calendar you want to save OpenFlyers events to"
 # CREDENTIALS_HELP="Path to a text file where the first line is your Google account name, the second line is your password, and the third optional line is the name of the calendar you want to register OpenFlyer's events to"
-FILE_OPT_HELP="One or several text files with one or several automatic messages sent by OpenFlyers"
+FILE_OPT_HELP="One or several text files with one or several automatic " + \
+              "messages sent by OpenFlyers"
 FILE_OUT_HELP="Output file name"
 
+# Dictionnary that matches output format string (passed as '--format' argument)
+# to the corresopnding generation function
 FORMATS={ 'csv':export.CsvExport.actions2csv, 'ics':None }
-
 FORMAT_HELP="Format of the output file. Accepted values are " +\
             ','.join(list(FORMATS.keys()))
 
 ################################################################################
 
 def read_input(input_files):
+    """Read from multiple input files and returns their content in a string"""
     ans = ""
     for ifile in input_files:
         try:
@@ -40,6 +51,7 @@ def read_input(input_files):
     return ans 
 
 def parse_arguments():
+    """"Parse the command line arguments and checks their sanity"""
     parser = argparse.ArgumentParser( description=DESCRIPTION_TEXT, \
                                       add_help=True)
     # parser.add_argument("-u", "--username", type=str, nargs=1, \
@@ -64,14 +76,20 @@ def parse_arguments():
 
 
 def run():
+    """Main function"""
+    # Parse the command line arguments
     args = parse_arguments()
 
+    # Read the input 
     input_text = read_input(args.input_file)
+
+    # Process the input...
     actions = regexp.parse_text(input_text)
 
-    # Call the appropriate function
+    # Call the appropriate function to generate the output
     ans = FORMATS[args.format](actions)
 
+    # Write the output
     try:
         f = open(args.output, 'w') if args.output!='-' else sys.stdout
         f.write(ans)
